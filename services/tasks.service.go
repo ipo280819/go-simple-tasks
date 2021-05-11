@@ -11,6 +11,8 @@ type TaskService interface {
 	Create(task *entities.Task) (*entities.Task, error)
 	FindAll() ([]entities.Task, error)
 	Find(id string) (*entities.Task, error)
+	Delete(id string) (bool, error)
+	Update(id string, task *entities.Task) (bool, error)
 }
 
 type service struct {
@@ -51,4 +53,26 @@ func (*service) FindAll() ([]entities.Task, error) {
 
 func (*service) Find(id string) (*entities.Task, error) {
 	return repo.Find(id)
+}
+func (this *service) Delete(id string) (bool, error) {
+	_, err := this.Find(id)
+	if err != nil {
+		return false, err
+	}
+	return repo.Delete(id)
+}
+
+func (this *service) Update(id string, task *entities.Task) (bool, error) {
+	err := this.Validate(task)
+	if err != nil {
+		return false, err
+	}
+	_, err = this.Find(id)
+	if err != nil {
+		return false, err
+	}
+	task.ID = ""
+	wasUpdated, err := repo.Update(id, task)
+	task.ID = id
+	return wasUpdated, err
 }

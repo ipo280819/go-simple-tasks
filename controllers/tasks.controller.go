@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"go-tasks/constants"
+	"go-tasks/entities"
 	"go-tasks/services"
 	"net/http"
 )
@@ -26,4 +27,13 @@ func NewTaskController(service services.TaskService, typeRouter string) TaskCont
 		return NewTaskMuxController()
 	}
 	return nil
+}
+
+type TaskDeletedDTO struct {
+	ID         string `json:"id"`
+	WasDeleted bool   `json:"wasDeleted"`
+}
+type TaskUpdatedDTO struct {
+	entities.Task
+	WasUpdated bool `json:"wasUpdated"`
 }

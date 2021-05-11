@@ -58,12 +58,45 @@ func (*muxController) GetTask(w http.ResponseWriter, r *http.Request) {
 }
 func (*muxController) DeleteTask(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	_ = vars["id"]
+	id := vars["id"]
+	wasDeleted, err := taskService.Delete(id)
+	if err != nil {
+		if err.Error() == "Not Found" {
+			responseErrorStatus(http.StatusNotFound, w, err)
+			return
+		}
+		responseError(w, err)
+		return
+	}
+
+	result := TaskDeletedDTO{
+		id,
+		wasDeleted,
+	}
+	responseOK(w, result)
 }
 
 func (*muxController) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	_ = vars["id"]
+	id := vars["id"]
+	var task entities.Task
+	err := json.NewDecoder(r.Body).Decode(&task)
+	if err != nil {
+		responseError(w, err)
+		return
+	}
+	wasUpdated, err := taskService.Update(id, &task)
+	if err != nil {
+		if err.Error() == "Not Found" {
+			responseErrorStatus(http.StatusNotFound, w, err)
+			return
+		}
+		responseError(w, err)
+		return
+	}
+
+	result := TaskUpdatedDTO{task, wasUpdated}
+	responseOK(w, result)
 }
 
 func responseOK(w http.ResponseWriter, result interface{}) {

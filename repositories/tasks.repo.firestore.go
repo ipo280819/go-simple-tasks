@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"go-tasks/entities"
+	"go-tasks/utils"
 
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
@@ -29,10 +30,8 @@ func (*firebaseRepository) Save(task *entities.Task) (*entities.Task, error) {
 	}
 	defer client.Close()
 
-	dr, _, err := client.Collection(collectionName).Add(ctx, map[string]interface{}{
-		"name":    task.Name,
-		"content": task.Content,
-	})
+	taskCreate := utils.StructToMap(task)
+	dr, _, err := client.Collection(collectionName).Add(ctx, taskCreate)
 
 	if err != nil {
 		fmt.Println("Error creating task in firestore:", err)
@@ -95,6 +94,35 @@ func (*firebaseRepository) Find(id string) (*entities.Task, error) {
 	}
 	task.ID = id
 	return &task, nil
+}
+func (*firebaseRepository) Delete(id string) (bool, error) {
+
+	ctx := context.Background()
+	client, err := CreateFirestoreClient(ctx)
+	if err != nil {
+		return false, err
+	}
+	defer client.Close()
+	_, err = client.Collection(collectionName).Doc(id).Delete(ctx)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+func (*firebaseRepository) Update(id string, task *entities.Task) (bool, error) {
+
+	ctx := context.Background()
+	client, err := CreateFirestoreClient(ctx)
+	if err != nil {
+		return false, err
+	}
+	defer client.Close()
+	taskUpdate := utils.StructToMap(task)
+	_, err = client.Collection(collectionName).Doc(id).Set(ctx, taskUpdate)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 func CreateFirestoreClient(ctx context.Context) (*firestore.Client, error) {
