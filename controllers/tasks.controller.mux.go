@@ -46,11 +46,11 @@ func (*muxController) GetTask(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	task, err := taskService.Find(id)
-	if err.Error() == "Not Found" {
-		responseErrorStatus(http.StatusNotFound, w, err)
-		return
-	}
 	if err != nil {
+		if err.Error() == "Not Found" {
+			responseErrorStatus(http.StatusNotFound, w, err)
+			return
+		}
 		responseError(w, err)
 		return
 	}
