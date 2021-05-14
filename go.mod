@@ -9,5 +9,6 @@ require (
 	github.com/githubnemo/CompileDaemon v1.2.1
 	github.com/gorilla/mux v1.8.0
 	github.com/joho/godotenv v1.3.0 // indirect
+	github.com/stretchr/testify v1.7.0 // indirect
 	google.golang.org/api v0.46.0 // indirect
 )
