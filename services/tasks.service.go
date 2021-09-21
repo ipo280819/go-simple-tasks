@@ -7,12 +7,12 @@ import (
 )
 
 type TaskService interface {
-	Validate(task *entities.Task) error
-	Create(task *entities.Task) (*entities.Task, error)
-	FindAll() ([]entities.Task, error)
-	Find(id string) (*entities.Task, error)
+	Validate(task *entities.TaskDTO) error
+	Create(task *entities.TaskDTO) (*entities.TaskDTO, error)
+	FindAll() ([]entities.TaskDTO, error)
+	Find(id string) (*entities.TaskDTO, error)
 	Delete(id string) (bool, error)
-	Update(id string, task *entities.Task) (bool, error)
+	Update(id string, task *entities.TaskDTO) (bool, error)
 }
 
 type service struct {
@@ -27,7 +27,7 @@ func NewTaskService(repository repositories.TaskRepository) TaskService {
 	return &service{}
 }
 
-func (*service) Validate(task *entities.Task) error {
+func (*service) Validate(task *entities.TaskDTO) error {
 	if task == nil {
 		err := errors.New("Task is empty")
 		return err
@@ -39,7 +39,7 @@ func (*service) Validate(task *entities.Task) error {
 	return nil
 }
 
-func (this *service) Create(task *entities.Task) (*entities.Task, error) {
+func (this *service) Create(task *entities.TaskDTO) (*entities.TaskDTO, error) {
 	err := this.Validate(task)
 	if err != nil {
 		return nil, err
@@ -47,11 +47,11 @@ func (this *service) Create(task *entities.Task) (*entities.Task, error) {
 	return repo.Save(task)
 }
 
-func (*service) FindAll() ([]entities.Task, error) {
+func (*service) FindAll() ([]entities.TaskDTO, error) {
 	return repo.FindAll()
 }
 
-func (*service) Find(id string) (*entities.Task, error) {
+func (*service) Find(id string) (*entities.TaskDTO, error) {
 	return repo.Find(id)
 }
 func (this *service) Delete(id string) (bool, error) {
@@ -62,7 +62,7 @@ func (this *service) Delete(id string) (bool, error) {
 	return repo.Delete(id)
 }
 
-func (this *service) Update(id string, task *entities.Task) (bool, error) {
+func (this *service) Update(id string, task *entities.TaskDTO) (bool, error) {
 	err := this.Validate(task)
 	if err != nil {
 		return false, err

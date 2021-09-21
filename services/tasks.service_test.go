@@ -12,22 +12,22 @@ type mockTaskRepository struct {
 	mock.Mock
 }
 
-func (mock *mockTaskRepository) Save(task *entities.Task) (*entities.Task, error) {
+func (mock *mockTaskRepository) Save(task *entities.TaskDTO) (*entities.TaskDTO, error) {
 	args := mock.Called()
 	result := args.Get(0)
-	return result.(*entities.Task), args.Error(1)
+	return result.(*entities.TaskDTO), args.Error(1)
 }
 
-func (mock *mockTaskRepository) FindAll() ([]entities.Task, error) {
+func (mock *mockTaskRepository) FindAll() ([]entities.TaskDTO, error) {
 	args := mock.Called()
 	result := args.Get(0)
-	return result.([]entities.Task), args.Error(1)
+	return result.([]entities.TaskDTO), args.Error(1)
 }
 
-func (mock *mockTaskRepository) Find(id string) (*entities.Task, error) {
+func (mock *mockTaskRepository) Find(id string) (*entities.TaskDTO, error) {
 	args := mock.Called()
 	result := args.Get(0)
-	return result.(*entities.Task), args.Error(1)
+	return result.(*entities.TaskDTO), args.Error(1)
 }
 
 func (mock *mockTaskRepository) Delete(id string) (bool, error) {
@@ -36,7 +36,7 @@ func (mock *mockTaskRepository) Delete(id string) (bool, error) {
 	return result.(bool), args.Error(1)
 }
 
-func (mock *mockTaskRepository) Update(id string, task *entities.Task) (bool, error) {
+func (mock *mockTaskRepository) Update(id string, task *entities.TaskDTO) (bool, error) {
 	args := mock.Called()
 	result := args.Get(0)
 	return result.(bool), args.Error(1)
@@ -53,7 +53,7 @@ func TestValidateEmptyTask(t *testing.T) {
 func TestValidateEmptyTaskName(t *testing.T) {
 	testService := NewTaskService(nil)
 
-	task := entities.Task{}
+	task := entities.TaskDTO{}
 	err := testService.Validate(&task)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "Task name is empty")
@@ -62,7 +62,7 @@ func TestValidateEmptyTaskName(t *testing.T) {
 func TestValidateTask(t *testing.T) {
 	testService := NewTaskService(nil)
 
-	task := entities.Task{Name: "Task 1"}
+	task := entities.TaskDTO{Name: "Task 1"}
 	err := testService.Validate(&task)
 	assert.Nil(t, err)
 }
@@ -70,9 +70,9 @@ func TestValidateTask(t *testing.T) {
 func TestFindAll(t *testing.T) {
 	mockRepo := new(mockTaskRepository)
 
-	task := entities.Task{ID: "identifier", Name: "Task name", Content: "Task desc"}
+	task := entities.TaskDTO{ID: "identifier", Name: "Task name", Content: "Task desc"}
 
-	mockRepo.On("FindAll").Return([]entities.Task{task}, nil)
+	mockRepo.On("FindAll").Return([]entities.TaskDTO{task}, nil)
 
 	service := NewTaskService(mockRepo)
 

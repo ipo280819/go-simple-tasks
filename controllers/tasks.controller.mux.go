@@ -26,7 +26,7 @@ func (*muxController) GetTasks(w http.ResponseWriter, r *http.Request) {
 }
 
 func (*muxController) CreateTask(w http.ResponseWriter, r *http.Request) {
-	var newTask entities.Task
+	var newTask entities.TaskDTO
 	err := json.NewDecoder(r.Body).Decode(&newTask)
 	if err != nil {
 		responseError(w, err)
@@ -79,7 +79,7 @@ func (*muxController) DeleteTask(w http.ResponseWriter, r *http.Request) {
 func (*muxController) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
-	var task entities.Task
+	var task entities.TaskDTO
 	err := json.NewDecoder(r.Body).Decode(&task)
 	if err != nil {
 		responseError(w, err)

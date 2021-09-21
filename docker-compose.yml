@@ -1,0 +1,21 @@
+version: "3"
+
+services: 
+
+  mongoDB:
+    image: mongo
+    volumes: 
+      - ../mongo/data:/data/db:rw
+    ports:
+      - 27017:27017
+    restart: always
+
+  golang-api:
+    build: 
+      context: .
+    volumes: 
+      - ./secrets:/dist/secrets
+      - .env:/dist/.env
+    ports: 
+      - 3000:3000
+    restart: always

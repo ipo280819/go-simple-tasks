@@ -13,7 +13,7 @@ import (
 
 const (
 	useRouter     = constants.MUX
-	useRepository = constants.FIRESTORE
+	useRepository = constants.MONGO
 )
 
 var (

@@ -21,7 +21,7 @@ const (
 	collectionName = "Tasks"
 )
 
-func (*firebaseRepository) Save(task *entities.Task) (*entities.Task, error) {
+func (*firebaseRepository) Save(task *entities.TaskDTO) (*entities.TaskDTO, error) {
 
 	ctx := context.Background()
 	client, err := CreateFirestoreClient(ctx)
@@ -41,16 +41,16 @@ func (*firebaseRepository) Save(task *entities.Task) (*entities.Task, error) {
 	return task, nil
 }
 
-func (*firebaseRepository) FindAll() ([]entities.Task, error) {
+func (*firebaseRepository) FindAll() ([]entities.TaskDTO, error) {
 	ctx := context.Background()
 	client, err := CreateFirestoreClient(ctx)
 	if err != nil {
 		return nil, err
 	}
 	defer client.Close()
-	var tasks []entities.Task
+	var tasks []entities.TaskDTO
 	iter := client.Collection(collectionName).Documents(ctx)
-	var task entities.Task
+	var task entities.TaskDTO
 	for {
 
 		doc, err := iter.Next()
@@ -73,7 +73,7 @@ func (*firebaseRepository) FindAll() ([]entities.Task, error) {
 	}
 	return tasks, nil
 }
-func (*firebaseRepository) Find(id string) (*entities.Task, error) {
+func (*firebaseRepository) Find(id string) (*entities.TaskDTO, error) {
 
 	ctx := context.Background()
 	client, err := CreateFirestoreClient(ctx)
@@ -81,7 +81,7 @@ func (*firebaseRepository) Find(id string) (*entities.Task, error) {
 		return nil, err
 	}
 	defer client.Close()
-	var task entities.Task
+	var task entities.TaskDTO
 	doc, err := client.Collection(collectionName).Doc(id).Get(ctx)
 	if !doc.Exists() {
 		err = errors.New("Not Found")
@@ -109,7 +109,7 @@ func (*firebaseRepository) Delete(id string) (bool, error) {
 	}
 	return true, nil
 }
-func (*firebaseRepository) Update(id string, task *entities.Task) (bool, error) {
+func (*firebaseRepository) Update(id string, task *entities.TaskDTO) (bool, error) {
 
 	ctx := context.Background()
 	client, err := CreateFirestoreClient(ctx)

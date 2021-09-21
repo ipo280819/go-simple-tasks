@@ -34,6 +34,6 @@ type TaskDeletedDTO struct {
 	WasDeleted bool   `json:"wasDeleted"`
 }
 type TaskUpdatedDTO struct {
-	entities.Task
+	entities.TaskDTO
 	WasUpdated bool `json:"wasUpdated"`
 }

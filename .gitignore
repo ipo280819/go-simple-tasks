@@ -1,4 +1,5 @@
 .env
 secrets
+mongo
 go-tasks.exe
 go-tasks.exe~

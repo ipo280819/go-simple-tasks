@@ -6,4 +6,5 @@ const (
 
 const (
 	FIRESTORE string = "firestore"
+	MONGO     string = "mongo"
 )

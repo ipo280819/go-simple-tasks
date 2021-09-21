@@ -6,11 +6,11 @@ import (
 )
 
 type TaskRepository interface {
-	Save(task *entities.Task) (*entities.Task, error)
-	FindAll() ([]entities.Task, error)
-	Find(id string) (*entities.Task, error)
+	Save(task *entities.TaskDTO) (*entities.TaskDTO, error)
+	FindAll() ([]entities.TaskDTO, error)
+	Find(id string) (*entities.TaskDTO, error)
 	Delete(id string) (bool, error)
-	Update(id string, task *entities.Task) (bool, error)
+	Update(id string, task *entities.TaskDTO) (bool, error)
 }
 
 func NewTaskRepository(typeRepo string) TaskRepository {
@@ -18,6 +18,9 @@ func NewTaskRepository(typeRepo string) TaskRepository {
 	switch typeRepo {
 	case constants.FIRESTORE:
 		return newFirestoreTaskRepository()
+
+	case constants.MONGO:
+		return newMongoTaskRepository()
 	}
 	return nil
 }
